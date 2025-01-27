@@ -60,7 +60,7 @@ Can we identify any instance in which a lower discount amount leads to higher sp
 2. View the DataFrame
 
 #### Azure Databricks is a Unified Analytics Platform for Data Engineers, Data Scientist, and Analysis  
-![arch](https://kpistoropen.blob.core.windows.net/collateral/roadshow/azure_roadshow_1.png)
+
 
 
 -----------------------------------------------------------------------------------------------------------------
