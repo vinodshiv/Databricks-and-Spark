@@ -30,6 +30,7 @@ def wrap_text(text, width=30):
     return textwrap.fill(text, width=width) if text else "None"
 
 def analyze_code(file_path):
+    """Analyzes a single Python file for imports and function calls."""
     try:
         with open(file_path, "r") as f:
             tree = ast.parse(f.read())
@@ -47,28 +48,35 @@ def analyze_code(file_path):
     }
 
 def analyze_folder(folder_path):
+    """Analyzes all Python files in a folder."""
     py_files = sorted(
         [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith(".py")]
-    )  # Sorts files alphabetically
+    )
 
     if not py_files:
         print("No Python files found in the folder.")
         return
 
     results = [analyze_code(file) for file in py_files]
-    
-    # Filter out any None results (in case of errors)
-    results = [r for r in results if r]
+    results = [r for r in results if r]  # Filter out errors
 
     print("\n📌 Analysis Results (Sorted by File Name):")
     print(tabulate(results, headers="keys", tablefmt="grid"))
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Analyze Python scripts in a folder for imports and function calls.")
-    parser.add_argument("folder", help="Path to the folder containing Python files.")
+def main():
+    parser = argparse.ArgumentParser(description="Analyze Python scripts for imports and function calls.")
+    parser.add_argument("path", help="Path to a Python file or a folder containing Python files.")
     args = parser.parse_args()
 
-    if os.path.isdir(args.folder):
-        analyze_folder(args.folder)
+    if os.path.isfile(args.path) and args.path.endswith(".py"):
+        result = analyze_code(args.path)
+        if result:
+            print("\n📌 Analysis Result:")
+            print(tabulate([result], headers="keys", tablefmt="grid"))
+    elif os.path.isdir(args.path):
+        analyze_folder(args.path)
     else:
-        print("Invalid folder path. Please provide a valid directory.")
+        print("Invalid path. Please provide a valid Python file or a folder containing Python files.")
+
+if __name__ == "__main__":
+    main()
